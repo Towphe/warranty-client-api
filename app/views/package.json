@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup" : "npm install tailwindcss",
+    "build-css" : "tailwindcss build src/styles.css -o public/styles.css",
+    "build-css-sync" : "tailwindcss build src/styles.css -o public/styles.css --watched"
   },
   "keywords": [],
   "author": "",
