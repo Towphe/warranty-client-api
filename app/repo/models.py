@@ -78,21 +78,6 @@ class Suppliers(Base):
     products = relationship('Products', back_populates='supplier')
 
 
-class Variations(Base):
-    __tablename__ = 'variations'
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='variations_pkey'),
-    )
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    created_at = Column(Date, nullable=False, server_default=text('CURRENT_DATE'))
-    is_active = Column(Boolean, server_default=text('false'))
-    updated_at = Column(Date)
-
-    products = relationship('Products', back_populates='variation')
-
-
 class Customers(Base):
     __tablename__ = 'customers'
     __table_args__ = (
@@ -118,7 +103,6 @@ class Products(Base):
     __table_args__ = (
         ForeignKeyConstraint(['brand_id'], ['brands.id'], name='fk_brand'),
         ForeignKeyConstraint(['supplier_id'], ['suppliers.id'], name='fk_supplier'),
-        ForeignKeyConstraint(['variation_id'], ['variations.id'], name='fk_variation'),
         PrimaryKeyConstraint('id', name='products_pkey')
     )
 
@@ -126,14 +110,13 @@ class Products(Base):
     brand_id = Column(Integer, nullable=False)
     supplier_id = Column(Integer, nullable=False)
     name = Column(String(250), nullable=False)
-    variation_id = Column(Integer)
     sku = Column(String(150))
     created_at = Column(Date, server_default=text('CURRENT_DATE'))
     updated_at = Column(Date)
 
     brand = relationship('Brands', back_populates='products')
     supplier = relationship('Suppliers', back_populates='products')
-    variation = relationship('Variations', back_populates='products')
+    variations = relationship('Variations', back_populates='product')
     entries = relationship('Entries', back_populates='product')
 
 
@@ -177,6 +160,23 @@ class Statuses(Base):
 
     consignee = relationship('Users', back_populates='statuses')
     entries = relationship('Entries', back_populates='status')
+
+
+class Variations(Base):
+    __tablename__ = 'variations'
+    __table_args__ = (
+        ForeignKeyConstraint(['product_id'], ['products.id'], name='fk_product'),
+        PrimaryKeyConstraint('id', name='variations_pkey')
+    )
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    created_at = Column(Date, nullable=False, server_default=text('CURRENT_DATE'))
+    product_id = Column(Integer, nullable=False)
+    is_active = Column(Boolean, server_default=text('false'))
+    updated_at = Column(Date)
+
+    product = relationship('Products', back_populates='variations')
 
 
 class Entries(Base):

@@ -4,14 +4,14 @@ from fastapi.staticfiles import StaticFiles
 
 # import from dependecies
 from .dependencies import get_common_db_session
-from .routers import products
+from .routers import store
 from .repo.database import Session
 from .repo.models import Variations
 import os
 
 api_app = FastAPI(title="api app")
 
-api_app.include_router(products.router)
+api_app.include_router(store.router)
 
 @api_app.get("/api")
 async def index():
